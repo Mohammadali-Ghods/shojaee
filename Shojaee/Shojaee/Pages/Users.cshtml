@@ -1,0 +1,385 @@
+﻿@page "/Users"
+@model Shojaee.Pages.UsersModel
+@{
+    Layout = "_Layout.cshtml";
+}
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic&display=swap" />
+<style>
+    body, input, button, textarea, select {
+        font-family: 'Noto Sans Arabic', sans-serif !important;
+        direction: rtl;
+    }
+
+    .user-card {
+        cursor: default;
+    }
+
+        .user-card .card-body {
+            direction: rtl;
+            text-align: right;
+        }
+
+    .avatar img {
+        object-fit: cover;
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+    }
+    /* مدال */
+    #addUserModal .modal-dialog {
+        max-width: 600px;
+    }
+
+    #addUserModal .modal-content {
+        overflow-y: auto;
+    }
+</style>
+<main class="adminuiux-content has-sidebar">
+    <div class="container mt-4" id="main-content">
+        <div class="row">
+            <div class="col-12 mb-4 d-flex align-items-center justify-content-between">
+                <h5>مدیریت کاربران</h5>
+                <button class="btn btn-primary" id="btnAddUser">افزودن کاربر جدید</button>
+            </div>
+            <div class="col-12" id="userBoxContainer">
+                <p>در حال بارگذاری کاربران...</p>
+            </div>
+        </div>
+    </div>
+</main>
+<!-- مدال افزودن/ویرایش کاربر -->
+<div id="addUserModal" class="modal fade" tabindex="-1" aria-labelledby="addUserModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <form id="userForm" class="modal-content" autocomplete="off">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addUserModalLabel">افزودن کاربر</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="بستن"></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="userEditId" />
+                <div class="mb-3">
+                    <label for="userFullNameInput" class="form-label">نام کامل</label>
+                    <input type="text" class="form-control" id="userFullNameInput" required />
+                </div>
+                <div class="mb-3">
+                    <label for="userNameInput" class="form-label">نام کاربری</label>
+                    <input type="text" class="form-control" id="userNameInput" required />
+                </div>
+                <div class="mb-3" id="passwordInputGroup">
+                    <label for="userPasswordInput" class="form-label">رمز عبور</label>
+                    <input type="password" class="form-control" id="userPasswordInput" autocomplete="new-password" />
+                    <small class="form-text text-muted">برای ویرایش رمز عبور را وارد کنید، اگر نمی‌خواهید تغییر بدهید خالی بگذارید.</small>
+                </div>
+                <div class="mb-3">
+                    <label for="userRoleSelect" class="form-label">نقش</label>
+                    <select class="form-select" id="userRoleSelect" required>
+                        <option value="User">کاربر</option>
+                        <option value="Admin">مدیر</option>
+                    </select>
+                </div>
+                <div class="form-check mb-3">
+                    <input class="form-check-input" type="checkbox" id="userDisabledCheckbox" />
+                    <label class="form-check-label" for="userDisabledCheckbox">غیرفعال</label>
+                </div>
+                <div class="mb-3">
+                    <label for="userImageInput" class="form-label">تصویر کاربر</label>
+                    <input type="file" id="userImageInput" accept="image/*" class="form-control" />
+                    <div id="userImagePreview" class="mt-2"></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">انصراف</button>
+                <button type="submit" class="btn btn-success" id="saveUserBtn">ذخیره کاربر</button>
+            </div>
+        </form>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    // --- توابع پایه و احراز هویت ---
+    function getCookieValue(cookieName) {
+    const cookies = document.cookie.split(';');
+    for (const cookie of cookies) {
+    const c = cookie.trim();
+    if (c.startsWith(cookieName + '=')) {
+    return c.substring(cookieName.length + 1);
+    }
+    }
+    return '';
+    }
+    function redirectToLogin() {
+    window.location.href = '/Login';
+    }
+    const token = getCookieValue('token');
+    if (!token) redirectToLogin();
+    const userBoxContainer = document.getElementById('userBoxContainer');
+    const btnAddUser = document.getElementById('btnAddUser');
+    const userModalElem = document.getElementById('addUserModal');
+    const userModal = new bootstrap.Modal(userModalElem);
+    const userForm = document.getElementById('userForm');
+    const userEditIdInput = document.getElementById('userEditId');
+    const userFullNameInput = document.getElementById('userFullNameInput');
+    const userNameInput = document.getElementById('userNameInput');
+    const userPasswordInput = document.getElementById('userPasswordInput');
+    const userRoleSelect = document.getElementById('userRoleSelect');
+    const userDisabledCheckbox = document.getElementById('userDisabledCheckbox');
+    const userImageInput = document.getElementById('userImageInput');
+    const userImagePreview = document.getElementById('userImagePreview');
+    // متغیری برای ذخیره آدرس تصویر فعلی کاربر
+    let currentUserImageAddress = "";
+    async function fetchWithAuth(url, options = {}) {
+    options.headers = options.headers || {};
+    options.headers['Authorization'] = 'Bearer ' + token;
+    const response = await fetch(url, options);
+    if(response.status === 401 || response.status === 403) {
+    redirectToLogin();
+    return null;
+    }
+    return response;
+    }
+    // بارگذاری کاربران
+    async function loadUsers() {
+    userBoxContainer.innerHTML = "<p>در حال بارگذاری کاربران...</p>";
+    try {
+    const response = await fetchWithAuth('/GetAllUsers');
+    if(!response) return;
+    if(!response.ok) throw new Error("خطا در دریافت کاربران");
+    const users = await response.json();
+    renderUsers(users);
+    } catch (err) {
+    alert(err.message);
+    userBoxContainer.innerHTML = "";
+    }
+    }
+    // رندر کاربران
+    function renderUsers(users) {
+    userBoxContainer.innerHTML = "";
+    if(!users || users.length === 0){
+    userBoxContainer.innerHTML = "<p>کاربری وجود ندارد.</p>";
+    return;
+    }
+    users.forEach(user => {
+    const card = document.createElement('div');
+    card.className = "card adminuiux-card mb-3 user-card";
+    const cardBody = document.createElement('div');
+    cardBody.className = "card-body";
+    const row = document.createElement('div');
+    row.className = "row align-items-center";
+    const colAvatar = document.createElement('div');
+    colAvatar.className = "col-auto";
+    const avatarDiv = document.createElement('div');
+    avatarDiv.className = "avatar avatar-60 rounded-circle";
+    const avatarImg = document.createElement('img');
+    avatarImg.alt = "User Image";
+    avatarImg.src = (user.imageAddress && user.imageAddress.trim() !== "") ? user.imageAddress : "https://cdn-icons-png.flaticon.com/512/149/149071.png";
+    avatarDiv.appendChild(avatarImg);
+    colAvatar.appendChild(avatarDiv);
+    const colInfo = document.createElement('div');
+    colInfo.className = "col";
+    const fullNameH5 = document.createElement('h5');
+    fullNameH5.textContent = user.fullName || "بدون نام";
+    const userNameDiv = document.createElement('div');
+    userNameDiv.className = "text-muted";
+    userNameDiv.textContent = `نام کاربری: ${user.userName || "-"}`;
+    const userRoleDiv = document.createElement('div');
+    userRoleDiv.textContent = `نقش: ${user.role || "User"}`;
+    const userDisabledDiv = document.createElement('div');
+    userDisabledDiv.textContent = `وضعیت: ${user.disabled ? "غیرفعال" : "فعال"}`;
+    colInfo.appendChild(fullNameH5);
+    colInfo.appendChild(userNameDiv);
+    colInfo.appendChild(userRoleDiv);
+    colInfo.appendChild(userDisabledDiv);
+    const colActions = document.createElement('div');
+    colActions.className = "col-auto d-flex gap-2 flex-wrap";
+    const btnEdit = document.createElement('button');
+    btnEdit.className = "btn btn-outline-warning";
+    btnEdit.textContent = "ویرایش";
+    btnEdit.onclick = () => openUserModal(user);
+    const btnRemove = document.createElement('button');
+    btnRemove.className = "btn btn-outline-danger";
+    btnRemove.textContent = "حذف";
+    btnRemove.onclick = async () => {
+    if(!confirm(`آیا از حذف کاربر "${user.fullName || user.userName}" مطمئن هستید؟`)) return;
+    await deleteUser(user);
+    };
+    colActions.appendChild(btnEdit);
+    colActions.appendChild(btnRemove);
+    row.appendChild(colAvatar);
+    row.appendChild(colInfo);
+    row.appendChild(colActions);
+    cardBody.appendChild(row);
+    card.appendChild(cardBody);
+    userBoxContainer.appendChild(card);
+    });
+    }
+    // باز کردن مدال افزودن/ویرایش کاربر
+    function openUserModal(user = null) {
+    userPasswordInput.value = "";
+    if(user){
+    userEditIdInput.value = user.id || "";
+    userFullNameInput.value = user.fullName || "";
+    userNameInput.value = user.userName || "";
+    userRoleSelect.value = user.role || "User";
+    userDisabledCheckbox.checked = user.disabled || false;
+    userImagePreview.innerHTML = "";
+    if(user.imageAddress && user.imageAddress.trim() !== ""){
+    const img = document.createElement('img');
+    img.src = user.imageAddress;
+    img.alt = "تصویر کاربر";
+    img.style.maxWidth = "100%";
+    img.style.borderRadius = "6px";
+    userImagePreview.appendChild(img);
+    currentUserImageAddress = user.imageAddress; // ذخیره آدرس تصویر فعلی
+    } else {
+    currentUserImageAddress = "";
+    }
+    document.getElementById('addUserModalLabel').textContent = "ویرایش کاربر";
+    userNameInput.disabled = true; // نام کاربری در ویرایش غیرقابل تغییر است
+    } else {
+    userEditIdInput.value = "";
+    userFullNameInput.value = "";
+    userNameInput.value = "";
+    userRoleSelect.value = "User";
+    userDisabledCheckbox.checked = false;
+    userImagePreview.innerHTML = "";
+    currentUserImageAddress = "";
+    userNameInput.disabled = false;
+    }
+    userImageInput.value = "";
+    userModal.show();
+    }
+    // آپلود تصویر کاربر
+    userImageInput.addEventListener('change', async () => {
+    const file = userImageInput.files[0];
+    if (!file) {
+    // اگر فایل انتخاب نشد، مقدار آپلود شده پاک نشود (تصویر قبلی حفظ شود)
+    return;
+    }
+    userImagePreview.innerHTML = "<p>در حال آپلود تصویر...</p>";
+    const url = await uploadFile(file);
+    if (url) {
+    userImagePreview.innerHTML = "";
+    const img = document.createElement('img');
+    img.src = url;
+    img.alt = "تصویر کاربر";
+    img.style.maxWidth = "100%";
+    img.style.borderRadius = "6px";
+    userImagePreview.appendChild(img);
+    userImageInput._uploadedUrl = url;
+    } else {
+    userImagePreview.innerHTML = "<p class='text-danger'>خطا در آپلود تصویر</p>";
+    userImageInput._uploadedUrl = "";
+    }
+    });
+    async function uploadFile(file){
+    try{
+    const formData = new FormData();
+    formData.append('file', file);
+    const res = await fetch('Upload', {
+    method: "POST",
+    headers: { 'Authorization': 'Bearer ' + token },
+    body: formData
+    });
+    if(res.status === 401 || res.status === 403){
+    redirectToLogin();
+    return null;
+    }
+    if(!res.ok) throw new Error('خطا در آپلود فایل');
+    let text = await res.text();
+    text = text.trim().replace(/^"|"$/g, '');
+    return text;
+    }
+    catch(err){
+    console.error(err);
+    return null;
+    }
+    }
+    // ارسال فرم افزودن/ویرایش کاربر
+    userForm.addEventListener('submit', async e => {
+    e.preventDefault();
+    const id = userEditIdInput.value.trim();
+    const fullName = userFullNameInput.value.trim();
+    const userName = userNameInput.value.trim();
+    const password = userPasswordInput.value;
+    const role = userRoleSelect.value;
+    const disabled = userDisabledCheckbox.checked;
+    if(!fullName){
+    alert("لطفا نام کامل را وارد کنید.");
+    return;
+    }
+    if(!userName){
+    alert("لطفا نام کاربری را وارد کنید.");
+    return;
+    }
+    // تصمیم‌گیری برای عکس: اگر عکس جدید آپلود شده باشد استفاده شود، در غیر این صورت تصویر موجود قبلی حفظ شود
+    let imageAddressToSend = userImageInput._uploadedUrl || currentUserImageAddress || "";
+    let userObj = {
+    fullName,
+    userName,
+    role,
+    disabled,
+    imageAddress: imageAddressToSend
+    };
+    if(id){
+    userObj.id = id;
+    if(password && password.trim() !== ""){
+    userObj.password = password;
+    }
+    } else {
+    if(!password || password.trim() === ""){
+    alert("لطفا رمز عبور را وارد کنید.");
+    return;
+    }
+    userObj.password = password;
+    }
+    try {
+    const url = id ? "EditUser" : "AddUser";
+    const res = await fetch(url, {
+    method: "POST",
+    headers: {
+    'Authorization': 'Bearer ' + token,
+    'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(userObj)
+    });
+    if(res.status === 401 || res.status === 403){
+    redirectToLogin();
+    return;
+    }
+    if(!res.ok) {
+    const errText = await res.text();
+    throw new Error(errText || "خطا در ذخیره کاربر");
+    }
+    userModal.hide();
+    await loadUsers();
+    } catch(err){
+    alert(err.message);
+    }
+    });
+    // حذف کاربر
+    async function deleteUser(user){
+    try {
+    const res = await fetch("RemoveUser", {
+    method: "POST",
+    headers: {
+    'Authorization': 'Bearer ' + token,
+    'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ id: user.id })
+    });
+    if (res.status === 401 || res.status === 403) {
+    redirectToLogin();
+    return;
+    }
+    if (!res.ok) throw new Error("خطا در حذف کاربر");
+    await loadUsers();
+    } catch(err){
+    alert(err.message);
+    }
+    }
+    // رویدادهای صفحه
+    btnAddUser.addEventListener('click', () => openUserModal());
+    window.addEventListener('DOMContentLoaded', async () => {
+    await loadUsers();
+    });
+</script>

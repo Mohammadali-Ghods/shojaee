@@ -1,0 +1,214 @@
+﻿@page "/Login"
+
+@model Shojaee.Pages.LoginModel
+@{
+}
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <title>ورود به سامانه</title>
+    <link rel="icon" type="image/png" href="/images/tadayonlogo.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap"
+          rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic&display=swap"
+          rel="stylesheet">
+    <style>
+        :root {
+            --adminuiux-content-font: "Noto Sans Arabic", sans-serif;
+            --adminuiux-content-font-weight: 400;
+            --adminuiux-title-font: "Noto Sans Arabic", sans-serif;
+            --adminuiux-title-font-weight: 600;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        body, input, button, p, h1, h2, h3, h4, h5, h6, label {
+            font-family: "Noto Sans Arabic", sans-serif !important;
+        }
+    </style>
+    <script defer="defer" src="assets/js/app@f6722c35ac179e394082.js"></script>
+    <link href="assets/css/app.css@f6722c35ac179e394082.css" rel="stylesheet" />
+    @*  <script>
+         window.addEventListener("load", function () {
+         // Calculate expiry date: 2 years from now
+         const twoYearsInMs = 2 * 365 * 24 * 60 * 60 * 1000;
+         const expiresDate = new Date(Date.now() + twoYearsInMs).toUTCString();
+        // document.cookie = "adminuiuxlayoutmode=light; path=/; expires=" + expiresDate;
+        document.cookie = "adminuiuxsetimagepath=assets/img/backgorund-image/backgorund-image-12.jpg; path=/; expires=" + expiresDate;
+             document.cookie = "adminuiuxtheme=theme-grey; path=/; expires=" + expiresDate;
+             document.cookie = "adminuiuxsidebarfilled=adminuiux-sidebar-fill-white; path=/; expires=" + expiresDate;
+             document.cookie = "adminuiuxheaderfilled=adminuiux-header-fill-white; path=/; expires=" + expiresDate;
+         });
+    </script> *@
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+        setTimeout(function () {
+        // Change the direction of the entire page to RTL
+        document.documentElement.dir = "rtl";
+        document.querySelector("html").setAttribute("dir", "rtl");
+        console.log("Page direction changed to RTL after 0.5 seconds.");
+        }, 500);
+        });
+    </script>
+</head>
+<body class="main-bg main-bg-opac main-bg-blur adminuiux-sidebar-fill-white adminuiux-sidebar-boxed theme-blue roundedui"
+      data-theme="theme-blue"
+      data-sidebarfill="adminuiux-sidebar-fill-white"
+      data-bs-spy="scroll"
+      data-bs-target="#list-example"
+      data-bs-smooth-scroll="true"
+      tabindex="0">
+    <!-- بارگذار صفحه -->
+    <div class="pageloader">
+        <div class="container h-100">
+            <div class="row justify-content-center align-items-center text-center h-100">
+                <div class="col-12 mb-auto pt-4"></div>
+                <div class="col-auto">
+                    <img src="/images/tadayonlogo.png" alt="" class="height-60 mb-3">
+                    <p class="h6 mb-0">پنل مدیریتی تدین شاپ</p>
+                    <p class="h3 mb-4">لطفاً شکیبا باشید...</p>
+                    <div class="loader10 mb-2 mx-auto"></div>
+                </div>
+                <div class="col-12 mt-auto pb-4">
+                    <p class="text-secondary">در حال بارگذاری محتوا...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- پایان: بارگذار صفحه -->
+    <main class="flex-shrink-0 pt-0 h-100">
+        <div class="container-fluid">
+            <div class="auth-wrapper">
+                <div class="row">
+                    <div class="col-12 col-md-6 col-xl-4 minvheight-100 d-flex flex-column px-0">
+
+                        <div class="h-100 py-4 px-3">
+                            <div class="row h-100 align-items-center justify-content-center mt-md-4">
+                                <div class="col-11 col-sm-8 col-md-11 col-xl-11 col-xxl-10 login-box">
+                                    <div class="text-center mb-4">
+                                        <h1 class="mb-2">تدین شاپ</h1>
+                                        <p class="text-secondary">شماره موبایل خود را وارد کنید و کد یکبارمصرف دریافت نمایید.</p>
+                                    </div>
+                                    <!-- بخش شماره موبایل -->
+                                    <div class="form-floating mb-3">
+                                        <input type="text"
+                                               class="form-control"
+                                               id="userField"
+                                               placeholder="شماره موبایل خود را وارد کنید" />
+                                        <label for="userField">شماره موبایل</label>
+                                    </div>
+                                    <button id="getOtpBtn" class="btn btn-lg btn-theme w-100 mb-4">
+                                        ارسال کد
+                                    </button>
+                                    <!-- بخش پسورد (کد یکبارمصرف) که در ابتدا مخفی است -->
+                                    <div id="passwordSection" class="d-none">
+                                        <div class="form-floating mb-3">
+                                            <input type="password"
+                                                   class="form-control"
+                                                   id="passwd"
+                                                   placeholder="کد ارسالی را وارد کنید" />
+                                            <label for="passwd">کد ارسالی</label>
+                                        </div>
+                                        <button id="loginBtn" class="btn btn-lg btn-theme w-100 mb-4">
+                                            ورود
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Footer removed. -->
+                    </div>
+                    <div class="col-12 col-md-6 col-xl-8 p-4 d-none d-md-block">
+                        <div style="background-color:transparent !important;" class="card adminuiux-card bg-theme-1-space position-relative overflow-hidden h-100">
+                            <div style="background-size:cover !important;" class="position-absolute start-0 top-0 h-100 w-100 coverimg opacity-75 z-index-0">
+                                <img src="https://retail-merchandiser.com/wp-content/uploads/sites/8/2023/12/online-shopping-image.jpeg" alt="" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <script>
+        // هنگام بارگذاری صفحه اگر توکنی در کوکی ذخیره باشد، کاربر به داشبورد هدایت می‌شود
+        window.addEventListener("DOMContentLoaded", () => {
+        const existingToken = getCookie("token");
+        if (existingToken) {
+        // برای سادگی فرض می‌کنیم اگر توکن موجود است، معتبر است
+        window.location.href = "/Dashboard";
+        }
+        });
+        function getCookie(cname) {
+        let name = cname + "=";
+        let decodedCookie = decodeURIComponent(document.cookie);
+        let ca = decodedCookie.split(";");
+        for (let i = 0; i < ca.length; i++) {
+        let c = ca[i].trim();
+        if (c.indexOf(name) === 0) {
+        return c.substring(name.length, c.length);
+        }
+        }
+        return "";
+        }
+        // دکمه "ارسال کد" برای دریافت کد یکبارمصرف
+        document.getElementById("getOtpBtn").addEventListener("click", async () => {
+        const userVal = document.querySelector("#userField").value;
+        if (!userVal) {
+        alert("لطفا شماره موبایل را وارد کنید");
+        return;
+        }
+        try {
+        const response = await fetch("/OneTimePassword", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ UserName: userVal })
+        });
+        if (!response.ok) {
+        throw new Error("ارسال کد ناموفق بود. وضعیت: " + response.status);
+        }
+        // اگر موفقیت‌آمیز بود، بخش رمز ظاهر شود
+        document.getElementById("passwordSection").classList.remove("d-none");
+
+        } catch (err) {
+        alert(err.message);
+        }
+        });
+        // دکمه "ورود" برای وارد کردن کد و دریافت توکن
+        document.getElementById("loginBtn").addEventListener("click", async () => {
+        const userVal = document.querySelector("#userField").value;
+        const password = document.querySelector("#passwd").value;
+        if (!userVal || !password) {
+
+        return;
+        }
+        try {
+        const response = await fetch("/Login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+        UserName: userVal,
+        Password: password,
+        }),
+        });
+        if (!response.ok) {
+        throw new Error("ورود ناموفق بود. وضعیت: " + response.status);
+        }
+        const user = await response.json();
+        // ذخیره توکن در کوکی
+        document.cookie = `token=${user.lastToken}; path=/;`;
+        // هدایت به داشبورد
+        window.location.href = "/Dashboard";
+        } catch (err) {
+        alert(err.message);
+        }
+        });
+    </script>
+</body>
+</html>

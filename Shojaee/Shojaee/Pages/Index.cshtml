@@ -1,0 +1,114 @@
+﻿@page "/Dashboard"
+@model Shojaee.Pages.IndexModel
+@{
+    Layout = "_Layout.cshtml";
+}
+<main class="adminuiux-content has-sidebar" onclick="contentClick()">
+    <div class="container-fluid mt-4">
+        <div class="row gx-3 align-items-center">
+            <div class="col-12 col-sm">
+                <h5>بخش های پنل مدیریت فروشگاه اینترنتی تدین شاپ</h5>
+            </div>
+        </div>
+    </div>
+    <div class="container mt-4" id="main-content">
+        <!-- کارت 1: دسته بندی محصولات -->
+        <div class="card adminuiux-card mb-3">
+            <div class="card-body">
+                <div class="row gx-3">
+                    <div class="col">
+                        <h4>دسته‌بندی محصولات</h4>
+                        <p class="text-secondary">
+                            در این بخش دسته‌بندی محصولات خود را به صورت درختی مشخص کنید. <br />
+                            پیش از ایجاد محصول جدید، لطفاً این بخش را حتماً تکمیل نمایید. <br />
+                            با این امکان، ساختار مشخص و منظمی برای دسترسی آسان‌تر به محصولات خود فراهم می‌شود.
+                        </p>
+                    </div>
+                    <div class="col-auto">
+                        <div class="avatar avatar-80 rounded bg-theme-1-subtle text-theme-1">
+                            <i class="bi bi-card-text h1"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- کارت 2: مدیریت محصولات -->
+        <div class="card adminuiux-card mb-3">
+            <div class="card-body">
+                <div class="row gx-3">
+                    <div class="col">
+                        <h4>محصولات</h4>
+                        <p class="text-secondary">
+                            در این بخش می‌توانید محصولات خود را مدیریت کنید. <br />
+                            امکان اضافه کردن، ویرایش، تغییر قیمت، بارگذاری تصویر و سایر موارد مرتبط با محصول در اینجا فراهم شده است. <br />
+                            مدیریت دقیق محصولات شما به بهبود فروش و رضایت مشتریان کمک خواهد کرد.
+                        </p>
+                    </div>
+                    <div class="col-auto">
+                        <div class="avatar avatar-80 rounded bg-theme-1-subtle text-theme-1">
+                            <i class="bi bi-box-seam h1"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- کارت 3: کامنت‌ها -->
+        <div class="card adminuiux-card mb-3">
+            <div class="card-body">
+                <div class="row gx-3">
+                    <div class="col">
+                        <h4>کامنت‌ها</h4>
+                        <p class="text-secondary">
+                            در این بخش می‌توانید کامنت‌های دریافتی درباره محصولات یا خدمات خود را مشاهده و بررسی کنید. <br />
+                            امکان پاسخگویی و مدیریت نظرات باعث بهبود ارتباط با مشتریان و ارتقای کیفیت خدمات می‌شود.
+                        </p>
+                    </div>
+                    <div class="col-auto">
+                        <div class="avatar avatar-80 rounded bg-theme-1-subtle text-theme-1">
+                            <i class="bi bi-chat-left-text h1"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- کارت 4: مشتریان -->
+        <div class="card adminuiux-card mb-3">
+            <div class="card-body">
+                <div class="row gx-3">
+                    <div class="col">
+                        <h4>مشتریان</h4>
+                        <p class="text-secondary">
+                            لیست مشتریان خود را در این بخش مشاهده کنید و با ابزارهای موجود آنها را دسته‌بندی و مدیریت نمایید. <br />
+                            این امکان به بهبود خدمات‌رسانی و ایجاد ارتباط مؤثر با مشتریان کمک می‌کند.
+                        </p>
+                    </div>
+                    <div class="col-auto">
+                        <div class="avatar avatar-80 rounded bg-theme-1-subtle text-theme-1">
+                            <i class="bi bi-people h1"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- کارت 5: سفارش‌ها -->
+        <div class="card adminuiux-card mb-3">
+            <div class="card-body">
+                <div class="row gx-3">
+                    <div class="col">
+                        <h4>سفارش‌ها</h4>
+                        <p class="text-secondary">
+                            کلیه سفارش‌های دریافتی، چه سفارش‌های فعلی و چه گذشته، در این بخش قابل مشاهده و مدیریت هستند. <br />
+                            امکاناتی برای بررسی وضعیت سفارش، تغییرات و پیگیری سفارشات در این قسمت فراهم شده است.
+                        </p>
+                    </div>
+                    <div class="col-auto">
+                        <div class="avatar avatar-80 rounded bg-theme-1-subtle text-theme-1">
+                            <i class="bi bi-card-checklist h1"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- پایان صفحه اصلی -->
+</main>
