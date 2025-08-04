@@ -1,0 +1,32 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <script>
+        window.addEventListener("load", function () {
+            // Calculate expiry date: 2 years from now
+            const twoYearsInMs = 2 * 365 * 24 * 60 * 60 * 1000;
+            const expiresDate = new Date(Date.now() + twoYearsInMs).toUTCString();
+
+            //// Set the cookies
+            //document.cookie = "adminuiuxlayoutmode=dark; path=/; expires=" + expiresDate;
+            //document.cookie = "adminuiuxsetimagepath=; path=/; expires=" + expiresDate;
+            //document.cookie = "adminuiuxtheme=theme-cyan; path=/; expires=" + expiresDate;
+            //document.cookie = "adminuiuxheaderlayout=adminuiux-header-boxed; path=/; expires=" + expiresDate;
+            //document.cookie = "adminuiuxheaderfilled=adminuiux-header-transparent; path=/; expires=" + expiresDate;
+
+            // Set the cookies
+            // document.cookie = "adminuiuxlayoutmode=light; path=/; expires=" + expiresDate;
+            //document.cookie = "adminuiuxsetimagepath=assets/img/backgorund-image/backgorund-image-12.jpg; path=/; expires=" + expiresDate;
+            //document.cookie = "adminuiuxtheme=theme-grey; path=/; expires=" + expiresDate;
+            //document.cookie = "adminuiuxsidebarfilled=adminuiux-sidebar-fill-white; path=/; expires=" + expiresDate;
+            //document.cookie = "adminuiuxheaderfilled=adminuiux-header-fill-white; path=/; expires=" + expiresDate;
+            window.location.href = '/login';
+        });
+    </script>
+</head>
+<body>
+
+</body>
+</html>
