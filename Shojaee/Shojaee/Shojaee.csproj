@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Include="wwwroot\wp-content\plugins\js_composer\assets\lib\vendor\node_modules\isotope-layout\dist\isotope.pkgd.min7035.js" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="9.0.7" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.0" />
 	  <PackageReference Include="MongoDB.Entities" Version="24.1.1" />
