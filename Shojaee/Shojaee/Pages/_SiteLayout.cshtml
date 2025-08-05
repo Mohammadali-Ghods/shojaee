@@ -39,6 +39,12 @@
         !function(i,n){var o,s,e;function c(e){try{var t={supportTests:e,timestamp:(new Date).valueOf()};sessionStorage.setItem(o,JSON.stringify(t))}catch(e){}}function p(e,t,n){e.clearRect(0,0,e.canvas.width,e.canvas.height),e.fillText(t,0,0);var t=new Uint32Array(e.getImageData(0,0,e.canvas.width,e.canvas.height).data),r=(e.clearRect(0,0,e.canvas.width,e.canvas.height),e.fillText(n,0,0),new Uint32Array(e.getImageData(0,0,e.canvas.width,e.canvas.height).data));return t.every(function(e,t){return e===r[t]})}function u(e,t,n){switch(t){case"flag":return n(e,"\ud83c\udff3\ufe0f\u200d\u26a7\ufe0f","\ud83c\udff3\ufe0f\u200b\u26a7\ufe0f")?!1:!n(e,"\ud83c\uddfa\ud83c\uddf3","\ud83c\uddfa\u200b\ud83c\uddf3")&&!n(e,"\ud83c\udff4\udb40\udc67\udb40\udc62\udb40\udc65\udb40\udc6e\udb40\udc67\udb40\udc7f","\ud83c\udff4\u200b\udb40\udc67\u200b\udb40\udc62\u200b\udb40\udc65\u200b\udb40\udc6e\u200b\udb40\udc67\u200b\udb40\udc7f");case"emoji":return!n(e,"\ud83d\udc26\u200d\u2b1b","\ud83d\udc26\u200b\u2b1b")}return!1}function f(e,t,n){var r="undefined"!=typeof WorkerGlobalScope&&self instanceof WorkerGlobalScope?new OffscreenCanvas(300,150):i.createElement("canvas"),a=r.getContext("2d",{willReadFrequently:!0}),o=(a.textBaseline="top",a.font="600 32px Arial",{});return e.forEach(function(e){o[e]=t(a,e,n)}),o}function t(e){var t=i.createElement("script");t.src=e,t.defer=!0,i.head.appendChild(t)}"undefined"!=typeof Promise&&(o="wpEmojiSettingsSupports",s=["flag","emoji"],n.supports={everything:!0,everythingExceptFlag:!0},e=new Promise(function(e){i.addEventListener("DOMContentLoaded",e,{once:!0})}),new Promise(function(t){var n=function(){try{var e=JSON.parse(sessionStorage.getItem(o));if("object"==typeof e&&"number"==typeof e.timestamp&&(new Date).valueOf()<e.timestamp+604800&&"object"==typeof e.supportTests)return e.supportTests}catch(e){}return null}();if(!n){if("undefined"!=typeof Worker&&"undefined"!=typeof OffscreenCanvas&&"undefined"!=typeof URL&&URL.createObjectURL&&"undefined"!=typeof Blob)try{var e="postMessage("+f.toString()+"("+[JSON.stringify(s),u.toString(),p.toString()].join(",")+"));",r=new Blob([e],{type:"text/javascript"}),a=new Worker(URL.createObjectURL(r),{name:"wpTestEmojiSupports"});return void(a.onmessage=function(e){c(n=e.data),a.terminate(),t(n)})}catch(e){}c(n=f(s,u,p))}t(n)}).then(function(e){for(var t in e)n.supports[t]=e[t],n.supports.everything=n.supports.everything&&n.supports[t],"flag"!==t&&(n.supports.everythingExceptFlag=n.supports.everythingExceptFlag&&n.supports[t]);n.supports.everythingExceptFlag=n.supports.everythingExceptFlag&&!n.supports.flag,n.DOMReady=!1,n.readyCallback=function(){n.DOMReady=!0}}).then(function(){return e}).then(function(){var e;n.supports.everything||(n.readyCallback(),(e=n.source||{}).concatemoji?t(e.concatemoji):e.wpemoji&&e.twemoji&&(t(e.twemoji),t(e.wpemoji)))}))}((window,document),window._wpemojiSettings);
         /* ]]> */
     </script>
+    <link rel='stylesheet' href='Font.css' type='text/css' />
+    <style>
+        body, input, button, p, h1, h2, h3, h4, h5, h6, label, a {
+            font-family: dana, sans-serif !important;
+        }
+    </style>
     <style id='wp-emoji-styles-inline-css' type='text/css'>
 
         img.wp-smiley, img.emoji {
@@ -725,7 +731,7 @@
                 <div class="eltdf-menu-area eltdf-menu-center">
 
 
-                    <div class="eltdf-vertical-align-containers">
+                    <div style="padding-left:0px !important" class="eltdf-vertical-align-containers">
                         <div class="eltdf-position-left">
                             <!--
                             -->
@@ -735,12 +741,7 @@
                                 <div class="eltdf-logo-wrapper eltdf-svg-logo">
                                     <a itemprop="url" href="index.html">
                                         <span class="eltdf-logo-svg-path">
-                                            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-                                                 width="34.875px" height="46.938px" viewBox="0 0 34.875 46.938" enable-background="new 0 0 34.875 46.938" xml:space="preserve">
-<polyline fill="none" stroke="#C9AB81" stroke-miterlimit="10" points="0.5,0.003 0.5,36.438 22.875,36.438 " />
-<polyline fill="none" stroke="#C9AB81" stroke-miterlimit="10" points="6.5,5.003 6.5,41.438 28.875,41.438 " />
-<polyline fill="none" stroke="#C9AB81" stroke-miterlimit="10" points="12.5,10.003 12.5,46.438 34.875,46.438 " />
-</svg>
+                                            <img style="width:100px !important" src="https://shojaeichef.com/wp-content/uploads/2022/10/shahram-shojaei.png" />
                                         </span>
                                     </a>
                                 </div>
@@ -754,27 +755,35 @@
 
                                 <nav class="eltdf-main-menu eltdf-drop-down eltdf-default-nav">
                                     <ul id="menu-main-menu" class="clearfix">
-                                        <li id="nav-menu-item-13" class="menu-item menu-item-type-custom menu-item-object-custom current-menu-ancestor current-menu-parent menu-item-has-children eltdf-active-item has_sub narrow">
-                                            <a href="#" class=" current "><span class="item_outer"><span class="item_text">Home</span></span></a>
+                                        <li id="nav-menu-item-18" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children  has_sub narrow">
+                                            <a href="#" class=""><span class="item_outer"><span class="item_text">ارتباط با ما</span></span></a>
                                             <div class="second">
                                                 <div class="inner">
                                                     <ul>
-                                                        <li id="nav-menu-item-14" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-home current-menu-item page_item page-item-7 current_page_item "><a href="index.html" class=""><span class="item_outer"><span class="item_text">Main Home</span></span></a></li>
-                                                        <li id="nav-menu-item-389" class="menu-item menu-item-type-post_type menu-item-object-page "><a href="bar-home/index.html" class=""><span class="item_outer"><span class="item_text">Bar Home</span></span></a></li>
-                                                        <li id="nav-menu-item-319" class="menu-item menu-item-type-post_type menu-item-object-page "><a href="restaurant-home/index.html" class=""><span class="item_outer"><span class="item_text">Restaurant Home</span></span></a></li>
-                                                        <li id="nav-menu-item-218" class="menu-item menu-item-type-post_type menu-item-object-page "><a href="fine-dining/index.html" class=""><span class="item_outer"><span class="item_text">Fine Dining</span></span></a></li>
-                                                        <li id="nav-menu-item-893" class="menu-item menu-item-type-post_type menu-item-object-page "><a href="split-screen-showcase/index.html" class=""><span class="item_outer"><span class="item_text">Split Screen Showcase</span></span></a></li>
-                                                        <li id="nav-menu-item-231" class="menu-item menu-item-type-post_type menu-item-object-page "><a href="haute-cuisine/index.html" class=""><span class="item_outer"><span class="item_text">Haute Cuisine</span></span></a></li>
-                                                        <li id="nav-menu-item-503" class="menu-item menu-item-type-post_type menu-item-object-page "><a href="restaurant-menu/index.html" class=""><span class="item_outer"><span class="item_text">Restaurant Menu</span></span></a></li>
-                                                        <li id="nav-menu-item-381" class="menu-item menu-item-type-post_type menu-item-object-page "><a href="fullscreen-showcase/index.html" class=""><span class="item_outer"><span class="item_text">Fullscreen Showcase</span></span></a></li>
-                                                        <li id="nav-menu-item-822" class="menu-item menu-item-type-post_type menu-item-object-page "><a href="carousel-showcase/index.html" class=""><span class="item_outer"><span class="item_text">Carousel Showcase</span></span></a></li>
-                                                        <li id="nav-menu-item-1359" class="menu-item menu-item-type-post_type menu-item-object-page "><a href="landing/index.html" class=""><span class="item_outer"><span class="item_text">Landing</span></span></a></li>
+                                                        <li id="nav-menu-item-976" class="menu-item menu-item-type-post_type menu-item-object-page "><a href="shop/index.html" class=""><span class="item_outer"><span class="item_text">Product List</span></span></a></li>
+                                                        <li id="nav-menu-item-1117" class="menu-item menu-item-type-post_type menu-item-object-product "><a href="product/dadiho-de-tapo/index.html" class=""><span class="item_outer"><span class="item_text">Product Single</span></span></a></li>
+                                                        <li id="nav-menu-item-1194" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children sub">
+                                                            <a href="#" class=" no_link" onclick="JavaScript: return false;"><span class="item_outer"><span class="item_text">Shop Layouts</span><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 8.3 8.5" class="eltdf-menu-arrow"><polyline points="0.4 0.4 3.6 4.2 0.4 8.1 " /><polyline points="4.5 0.4 7.7 4.2 4.5 8.1 " /></svg></span></a>
+                                                            <ul>
+                                                                <li id="nav-menu-item-1197" class="menu-item menu-item-type-post_type menu-item-object-page "><a href="shop-three-columns/index.html" class=""><span class="item_outer"><span class="item_text">Three Col.</span></span></a></li>
+                                                                <li id="nav-menu-item-1196" class="menu-item menu-item-type-post_type menu-item-object-page "><a href="shop-four-columns/index.html" class=""><span class="item_outer"><span class="item_text">Four Col.</span></span></a></li>
+                                                                <li id="nav-menu-item-1195" class="menu-item menu-item-type-post_type menu-item-object-page "><a href="shop-full-width/index.html" class=""><span class="item_outer"><span class="item_text">Full Width</span></span></a></li>
+                                                            </ul>
+                                                        </li>
+                                                        <li id="nav-menu-item-1028" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children sub">
+                                                            <a href="#" class=" no_link" onclick="JavaScript: return false;"><span class="item_outer"><span class="item_text">Shop Pages</span><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 8.3 8.5" class="eltdf-menu-arrow"><polyline points="0.4 0.4 3.6 4.2 0.4 8.1 " /><polyline points="4.5 0.4 7.7 4.2 4.5 8.1 " /></svg></span></a>
+                                                            <ul>
+                                                                <li id="nav-menu-item-973" class="menu-item menu-item-type-post_type menu-item-object-page "><a href="my-account/index.html" class=""><span class="item_outer"><span class="item_text">My Account</span></span></a></li>
+                                                                <li id="nav-menu-item-974" class="menu-item menu-item-type-post_type menu-item-object-page "><a href="checkout/index.html" class=""><span class="item_outer"><span class="item_text">Checkout</span></span></a></li>
+                                                                <li id="nav-menu-item-975" class="menu-item menu-item-type-post_type menu-item-object-page "><a href="cart/index.html" class=""><span class="item_outer"><span class="item_text">Cart</span></span></a></li>
+                                                            </ul>
+                                                        </li>
                                                     </ul>
                                                 </div>
                                             </div>
                                         </li>
                                         <li id="nav-menu-item-15" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children  has_sub narrow">
-                                            <a href="#" class=""><span class="item_outer"><span class="item_text">Pages</span></span></a>
+                                            <a href="#" class=""><span class="item_outer"><span class="item_text">محصولات</span></span></a>
                                             <div class="second">
                                                 <div class="inner">
                                                     <ul>
@@ -792,7 +801,7 @@
                                             </div>
                                         </li>
                                         <li id="nav-menu-item-16" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children  has_sub narrow">
-                                            <a href="#" class=""><span class="item_outer"><span class="item_text">Portfolio</span></span></a>
+                                            <a href="#" class=""><span class="item_outer"><span class="item_text">دوره های آموزشی</span></span></a>
                                             <div class="second">
                                                 <div class="inner">
                                                     <ul>
@@ -830,7 +839,7 @@
                                             </div>
                                         </li>
                                         <li id="nav-menu-item-17" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children  has_sub narrow">
-                                            <a href="#" class=""><span class="item_outer"><span class="item_text">Blog</span></span></a>
+                                            <a href="#" class=""><span class="item_outer"><span class="item_text">سوابق کاری و پروژه ها</span></span></a>
                                             <div class="second">
                                                 <div class="inner">
                                                     <ul>
@@ -854,29 +863,22 @@
                                                 </div>
                                             </div>
                                         </li>
-                                        <li id="nav-menu-item-18" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children  has_sub narrow">
-                                            <a href="#" class=""><span class="item_outer"><span class="item_text">Shop</span></span></a>
+                                       
+                                        <li id="nav-menu-item-13" class="menu-item menu-item-type-custom menu-item-object-custom current-menu-ancestor current-menu-parent menu-item-has-children eltdf-active-item has_sub narrow">
+                                            <a href="#" class=" current "><span class="item_outer"><span class="item_text">صفحه اصلی</span></span></a>
                                             <div class="second">
                                                 <div class="inner">
                                                     <ul>
-                                                        <li id="nav-menu-item-976" class="menu-item menu-item-type-post_type menu-item-object-page "><a href="shop/index.html" class=""><span class="item_outer"><span class="item_text">Product List</span></span></a></li>
-                                                        <li id="nav-menu-item-1117" class="menu-item menu-item-type-post_type menu-item-object-product "><a href="product/dadiho-de-tapo/index.html" class=""><span class="item_outer"><span class="item_text">Product Single</span></span></a></li>
-                                                        <li id="nav-menu-item-1194" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children sub">
-                                                            <a href="#" class=" no_link" onclick="JavaScript: return false;"><span class="item_outer"><span class="item_text">Shop Layouts</span><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 8.3 8.5" class="eltdf-menu-arrow"><polyline points="0.4 0.4 3.6 4.2 0.4 8.1 " /><polyline points="4.5 0.4 7.7 4.2 4.5 8.1 " /></svg></span></a>
-                                                            <ul>
-                                                                <li id="nav-menu-item-1197" class="menu-item menu-item-type-post_type menu-item-object-page "><a href="shop-three-columns/index.html" class=""><span class="item_outer"><span class="item_text">Three Col.</span></span></a></li>
-                                                                <li id="nav-menu-item-1196" class="menu-item menu-item-type-post_type menu-item-object-page "><a href="shop-four-columns/index.html" class=""><span class="item_outer"><span class="item_text">Four Col.</span></span></a></li>
-                                                                <li id="nav-menu-item-1195" class="menu-item menu-item-type-post_type menu-item-object-page "><a href="shop-full-width/index.html" class=""><span class="item_outer"><span class="item_text">Full Width</span></span></a></li>
-                                                            </ul>
-                                                        </li>
-                                                        <li id="nav-menu-item-1028" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children sub">
-                                                            <a href="#" class=" no_link" onclick="JavaScript: return false;"><span class="item_outer"><span class="item_text">Shop Pages</span><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 8.3 8.5" class="eltdf-menu-arrow"><polyline points="0.4 0.4 3.6 4.2 0.4 8.1 " /><polyline points="4.5 0.4 7.7 4.2 4.5 8.1 " /></svg></span></a>
-                                                            <ul>
-                                                                <li id="nav-menu-item-973" class="menu-item menu-item-type-post_type menu-item-object-page "><a href="my-account/index.html" class=""><span class="item_outer"><span class="item_text">My Account</span></span></a></li>
-                                                                <li id="nav-menu-item-974" class="menu-item menu-item-type-post_type menu-item-object-page "><a href="checkout/index.html" class=""><span class="item_outer"><span class="item_text">Checkout</span></span></a></li>
-                                                                <li id="nav-menu-item-975" class="menu-item menu-item-type-post_type menu-item-object-page "><a href="cart/index.html" class=""><span class="item_outer"><span class="item_text">Cart</span></span></a></li>
-                                                            </ul>
-                                                        </li>
+                                                        <li id="nav-menu-item-14" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-home current-menu-item page_item page-item-7 current_page_item "><a href="index.html" class=""><span class="item_outer"><span class="item_text">Main Home</span></span></a></li>
+                                                        <li id="nav-menu-item-389" class="menu-item menu-item-type-post_type menu-item-object-page "><a href="bar-home/index.html" class=""><span class="item_outer"><span class="item_text">Bar Home</span></span></a></li>
+                                                        <li id="nav-menu-item-319" class="menu-item menu-item-type-post_type menu-item-object-page "><a href="restaurant-home/index.html" class=""><span class="item_outer"><span class="item_text">Restaurant Home</span></span></a></li>
+                                                        <li id="nav-menu-item-218" class="menu-item menu-item-type-post_type menu-item-object-page "><a href="fine-dining/index.html" class=""><span class="item_outer"><span class="item_text">Fine Dining</span></span></a></li>
+                                                        <li id="nav-menu-item-893" class="menu-item menu-item-type-post_type menu-item-object-page "><a href="split-screen-showcase/index.html" class=""><span class="item_outer"><span class="item_text">Split Screen Showcase</span></span></a></li>
+                                                        <li id="nav-menu-item-231" class="menu-item menu-item-type-post_type menu-item-object-page "><a href="haute-cuisine/index.html" class=""><span class="item_outer"><span class="item_text">Haute Cuisine</span></span></a></li>
+                                                        <li id="nav-menu-item-503" class="menu-item menu-item-type-post_type menu-item-object-page "><a href="restaurant-menu/index.html" class=""><span class="item_outer"><span class="item_text">Restaurant Menu</span></span></a></li>
+                                                        <li id="nav-menu-item-381" class="menu-item menu-item-type-post_type menu-item-object-page "><a href="fullscreen-showcase/index.html" class=""><span class="item_outer"><span class="item_text">Fullscreen Showcase</span></span></a></li>
+                                                        <li id="nav-menu-item-822" class="menu-item menu-item-type-post_type menu-item-object-page "><a href="carousel-showcase/index.html" class=""><span class="item_outer"><span class="item_text">Carousel Showcase</span></span></a></li>
+                                                        <li id="nav-menu-item-1359" class="menu-item menu-item-type-post_type menu-item-object-page "><a href="landing/index.html" class=""><span class="item_outer"><span class="item_text">Landing</span></span></a></li>
                                                     </ul>
                                                 </div>
                                             </div>
