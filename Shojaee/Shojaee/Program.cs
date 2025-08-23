@@ -10,7 +10,6 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddRazorPages();
 builder.Services.AddControllers();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<JWTHandlingService>();
@@ -50,7 +49,35 @@ app.UseCors(c =>
     c.AllowAnyOrigin();
 });
 
+app.UseDefaultFiles(new DefaultFilesOptions
+{
+    DefaultFileNames = new List<string> { "UI/HomePage.html" }
+});
+
 app.UseStaticFiles();
+
+app.MapGet("/{page}", async context =>
+{
+    var page = context.Request.RouteValues["page"]?.ToString();
+    if (string.IsNullOrWhiteSpace(page))
+    {
+        context.Response.StatusCode = 404;
+        await context.Response.WriteAsync("Page not found");
+        return;
+    }
+    var filePath = Path.Combine(app.Environment.WebRootPath, "UI", page + ".html");
+    if (File.Exists(filePath))
+    {
+        context.Response.ContentType = "text/html";
+        await context.Response.SendFileAsync(filePath);
+    }
+    else
+    {
+        context.Response.StatusCode = 404;
+        await context.Response.WriteAsync("Page not found");
+    }
+});
+
 app.UseSwagger();
 app.UseSwaggerUI();
 
@@ -60,6 +87,5 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
-app.MapRazorPages();
 
 app.Run();
