@@ -49,33 +49,71 @@ app.UseCors(c =>
     c.AllowAnyOrigin();
 });
 
-app.UseDefaultFiles(new DefaultFilesOptions
-{
-    DefaultFileNames = new List<string> { "UI/HomePage.html" }
-});
 
 app.UseStaticFiles();
 
-app.MapGet("/{page}", async context =>
+app.MapGet("/", async context =>
 {
-    var page = context.Request.RouteValues["page"]?.ToString();
+    var page = "HomePage";
+
     if (string.IsNullOrWhiteSpace(page))
     {
         context.Response.StatusCode = 404;
         await context.Response.WriteAsync("Page not found");
         return;
     }
-    var filePath = Path.Combine(app.Environment.WebRootPath, "UI", page + ".html");
-    if (File.Exists(filePath))
+    var masterFilePath = Path.Combine(app.Environment.WebRootPath, "UI", "Master.html");
+    var pageFilePath = Path.Combine(app.Environment.WebRootPath, "UI", page + ".html");
+    if (!File.Exists(masterFilePath))
     {
-        context.Response.ContentType = "text/html";
-        await context.Response.SendFileAsync(filePath);
+        context.Response.StatusCode = 500;
+        await context.Response.WriteAsync("Master template not found");
+        return;
     }
-    else
+    if (!File.Exists(pageFilePath))
     {
         context.Response.StatusCode = 404;
         await context.Response.WriteAsync("Page not found");
+        return;
     }
+    var masterContent = await File.ReadAllTextAsync(masterFilePath);
+    var pageContent = await File.ReadAllTextAsync(pageFilePath);
+    // Replace [MainBody] with the page content
+    var combinedContent = masterContent.Replace("[MainBody]", pageContent);
+    context.Response.ContentType = "text/html";
+    await context.Response.WriteAsync(combinedContent);
+});
+
+app.MapGet("/{page}", async context =>
+{
+    var page = context.Request.RouteValues["page"]?.ToString();
+
+    if (string.IsNullOrWhiteSpace(page))
+    {
+        context.Response.StatusCode = 404;
+        await context.Response.WriteAsync("Page not found");
+        return;
+    }
+    var masterFilePath = Path.Combine(app.Environment.WebRootPath, "UI", "Master.html");
+    var pageFilePath = Path.Combine(app.Environment.WebRootPath, "UI", page + ".html");
+    if (!File.Exists(masterFilePath))
+    {
+        context.Response.StatusCode = 500;
+        await context.Response.WriteAsync("Master template not found");
+        return;
+    }
+    if (!File.Exists(pageFilePath))
+    {
+        context.Response.StatusCode = 404;
+        await context.Response.WriteAsync("Page not found");
+        return;
+    }
+    var masterContent = await File.ReadAllTextAsync(masterFilePath);
+    var pageContent = await File.ReadAllTextAsync(pageFilePath);
+    // Replace [MainBody] with the page content
+    var combinedContent = masterContent.Replace("[MainBody]", pageContent);
+    context.Response.ContentType = "text/html";
+    await context.Response.WriteAsync(combinedContent);
 });
 
 app.UseSwagger();
