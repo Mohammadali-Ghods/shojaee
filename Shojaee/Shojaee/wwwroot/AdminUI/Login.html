@@ -1,8 +1,4 @@
-﻿@page "/Login"
-
-@model Shojaee.Pages.LoginModel
-@{
-}
+﻿
 <!doctype html>
 <html lang="en">
 <head>
@@ -10,7 +6,7 @@
     <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
     <meta http-equiv="x-ua-compatible" content="ie=edge" />
     <title>ورود به سامانه</title>
-    <link rel="icon" type="image/png" href="/images/tadayonlogo.png" />
+    <link rel="icon" type="image/png" href="https://shojaeichef.com/wp-content/uploads/2022/10/shahram-shojaei.png" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap"
@@ -33,28 +29,29 @@
             font-family: "Noto Sans Arabic", sans-serif !important;
         }
     </style>
-    <script defer="defer" src="assets/js/app@f6722c35ac179e394082.js"></script>
-    <link href="assets/css/app.css@f6722c35ac179e394082.css" rel="stylesheet" />
-    @*  <script>
-         window.addEventListener("load", function () {
-         // Calculate expiry date: 2 years from now
-         const twoYearsInMs = 2 * 365 * 24 * 60 * 60 * 1000;
-         const expiresDate = new Date(Date.now() + twoYearsInMs).toUTCString();
-        // document.cookie = "adminuiuxlayoutmode=light; path=/; expires=" + expiresDate;
-        document.cookie = "adminuiuxsetimagepath=assets/img/backgorund-image/backgorund-image-12.jpg; path=/; expires=" + expiresDate;
-             document.cookie = "adminuiuxtheme=theme-grey; path=/; expires=" + expiresDate;
-             document.cookie = "adminuiuxsidebarfilled=adminuiux-sidebar-fill-white; path=/; expires=" + expiresDate;
-             document.cookie = "adminuiuxheaderfilled=adminuiux-header-fill-white; path=/; expires=" + expiresDate;
-         });
-    </script> *@
+    <script defer="defer" src="/assets/js/app@f6722c35ac179e394082.js"></script>
+    <link href="/assets/css/app.css@f6722c35ac179e394082.css" rel="stylesheet" />
+    
+    <script>
+        window.addEventListener("load", function () {
+            // Calculate expiry date: 2 years from now
+            const twoYearsInMs = 2 * 365 * 24 * 60 * 60 * 1000;
+            const expiresDate = new Date(Date.now() + twoYearsInMs).toUTCString();
+            // document.cookie = "adminuiuxlayoutmode=light; path=/; expires=" + expiresDate;
+            document.cookie = "adminuiuxsetimagepath=assets/img/backgorund-image/backgorund-image-12.jpg; path=/; expires=" + expiresDate;
+            document.cookie = "adminuiuxtheme=theme-grey; path=/; expires=" + expiresDate;
+            document.cookie = "adminuiuxsidebarfilled=adminuiux-sidebar-fill-white; path=/; expires=" + expiresDate;
+            document.cookie = "adminuiuxheaderfilled=adminuiux-header-fill-white; path=/; expires=" + expiresDate;
+        });
+    </script>
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-        setTimeout(function () {
-        // Change the direction of the entire page to RTL
-        document.documentElement.dir = "rtl";
-        document.querySelector("html").setAttribute("dir", "rtl");
-        console.log("Page direction changed to RTL after 0.5 seconds.");
-        }, 500);
+            setTimeout(function () {
+                // Change the direction of the entire page to RTL
+                document.documentElement.dir = "rtl";
+                document.querySelector("html").setAttribute("dir", "rtl");
+                console.log("Page direction changed to RTL after 0.5 seconds.");
+            }, 500);
         });
     </script>
 </head>
@@ -72,7 +69,7 @@
                 <div class="col-12 mb-auto pt-4"></div>
                 <div class="col-auto">
                     <img src="/images/tadayonlogo.png" alt="" class="height-60 mb-3">
-                    <p class="h6 mb-0">پنل مدیریتی تدین شاپ</p>
+                    <p class="h6 mb-0">پنل مدیریتی شجاعی</p>
                     <p class="h3 mb-4">لطفاً شکیبا باشید...</p>
                     <div class="loader10 mb-2 mx-auto"></div>
                 </div>
@@ -93,7 +90,7 @@
                             <div class="row h-100 align-items-center justify-content-center mt-md-4">
                                 <div class="col-11 col-sm-8 col-md-11 col-xl-11 col-xxl-10 login-box">
                                     <div class="text-center mb-4">
-                                        <h1 class="mb-2">تدین شاپ</h1>
+                                        <h1 class="mb-2">پنل مدیریتی شجاعی</h1>
                                         <p class="text-secondary">شماره موبایل خود را وارد کنید و کد یکبارمصرف دریافت نمایید.</p>
                                     </div>
                                     <!-- بخش شماره موبایل -->
@@ -139,75 +136,75 @@
     <script>
         // هنگام بارگذاری صفحه اگر توکنی در کوکی ذخیره باشد، کاربر به داشبورد هدایت می‌شود
         window.addEventListener("DOMContentLoaded", () => {
-        const existingToken = getCookie("token");
-        if (existingToken) {
-        // برای سادگی فرض می‌کنیم اگر توکن موجود است، معتبر است
-        window.location.href = "/Dashboard";
-        }
+            const existingToken = getCookie("token");
+            if (existingToken) {
+                // برای سادگی فرض می‌کنیم اگر توکن موجود است، معتبر است
+                window.location.href = "/Admin/Index";
+            }
         });
         function getCookie(cname) {
-        let name = cname + "=";
-        let decodedCookie = decodeURIComponent(document.cookie);
-        let ca = decodedCookie.split(";");
-        for (let i = 0; i < ca.length; i++) {
-        let c = ca[i].trim();
-        if (c.indexOf(name) === 0) {
-        return c.substring(name.length, c.length);
-        }
-        }
-        return "";
+            let name = cname + "=";
+            let decodedCookie = decodeURIComponent(document.cookie);
+            let ca = decodedCookie.split(";");
+            for (let i = 0; i < ca.length; i++) {
+                let c = ca[i].trim();
+                if (c.indexOf(name) === 0) {
+                    return c.substring(name.length, c.length);
+                }
+            }
+            return "";
         }
         // دکمه "ارسال کد" برای دریافت کد یکبارمصرف
         document.getElementById("getOtpBtn").addEventListener("click", async () => {
-        const userVal = document.querySelector("#userField").value;
-        if (!userVal) {
-        alert("لطفا شماره موبایل را وارد کنید");
-        return;
-        }
-        try {
-        const response = await fetch("/OneTimePassword", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ UserName: userVal })
-        });
-        if (!response.ok) {
-        throw new Error("ارسال کد ناموفق بود. وضعیت: " + response.status);
-        }
-        // اگر موفقیت‌آمیز بود، بخش رمز ظاهر شود
-        document.getElementById("passwordSection").classList.remove("d-none");
+            const userVal = document.querySelector("#userField").value;
+            if (!userVal) {
+                alert("لطفا شماره موبایل را وارد کنید");
+                return;
+            }
+            try {
+                const response = await fetch("/OneTimePassword", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ UserName: userVal })
+                });
+                if (!response.ok) {
+                    throw new Error("ارسال کد ناموفق بود. وضعیت: " + response.status);
+                }
+                // اگر موفقیت‌آمیز بود، بخش رمز ظاهر شود
+                document.getElementById("passwordSection").classList.remove("d-none");
 
-        } catch (err) {
-        alert(err.message);
-        }
+            } catch (err) {
+                alert(err.message);
+            }
         });
         // دکمه "ورود" برای وارد کردن کد و دریافت توکن
         document.getElementById("loginBtn").addEventListener("click", async () => {
-        const userVal = document.querySelector("#userField").value;
-        const password = document.querySelector("#passwd").value;
-        if (!userVal || !password) {
+            const userVal = document.querySelector("#userField").value;
+            const password = document.querySelector("#passwd").value;
+            if (!userVal || !password) {
 
-        return;
-        }
-        try {
-        const response = await fetch("/Login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-        UserName: userVal,
-        Password: password,
-        }),
-        });
-        if (!response.ok) {
-        throw new Error("ورود ناموفق بود. وضعیت: " + response.status);
-        }
-        const user = await response.json();
-        // ذخیره توکن در کوکی
-        document.cookie = `token=${user.lastToken}; path=/;`;
-        // هدایت به داشبورد
-        window.location.href = "/Dashboard";
-        } catch (err) {
-        alert(err.message);
-        }
+                return;
+            }
+            try {
+                const response = await fetch("/Login", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        UserName: userVal,
+                        Password: password,
+                    }),
+                });
+                if (!response.ok) {
+                    throw new Error("ورود ناموفق بود. وضعیت: " + response.status);
+                }
+                const user = await response.json();
+                // ذخیره توکن در کوکی
+                document.cookie = `token=${user.lastToken}; path=/;`;
+                // هدایت به داشبورد
+                window.location.href = "/Admin/Index";
+            } catch (err) {
+                alert(err.message);
+            }
         });
     </script>
 </body>

@@ -1,0 +1,311 @@
+﻿<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic&display=swap" />
+<style>
+    body, input, button, textarea, select {
+        font-family: 'Noto Sans Arabic', sans-serif !important;
+        direction: rtl;
+    }
+
+    .comment-card {
+        cursor: default;
+    }
+
+        .comment-card .card-body {
+            direction: rtl;
+            text-align: right;
+        }
+    /* مدال */
+    #addCommentModal .modal-dialog {
+        max-width: 600px;
+    }
+
+    #addCommentModal .modal-content {
+        overflow-y: auto;
+    }
+</style>
+<main class="adminuiux-content has-sidebar">
+    <div class="container mt-4" id="main-content">
+        <div class="row">
+            <div class="col-12 mb-4 d-flex align-items-center justify-content-between">
+                <h5>مدیریت کامنت‌ها</h5>
+                <button class="btn btn-primary" id="btnAddComment">افزودن کامنت جدید</button>
+            </div>
+            <div class="col-12" id="commentBoxContainer">
+                <p>در حال بارگذاری کامنت‌ها...</p>
+            </div>
+        </div>
+    </div>
+</main>
+<!-- مدال افزودن/ویرایش کامنت -->
+<div id="addCommentModal" class="modal fade" tabindex="-1" aria-labelledby="addCommentModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <form id="commentForm" class="modal-content" autocomplete="off">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addCommentModalLabel">افزودن کامنت</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="بستن"></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="commentEditId" />
+                <div class="mb-3">
+                    <label for="commentContentInput" class="form-label">متن کامنت</label>
+<textarea class="form-control" id="commentContentInput" rows="4" required></textarea>
+                </div>
+                <div class="mb-3" id="productIdInputGroup">
+                    <label for="commentProductIdInput" class="form-label">شناسه محصول مرتبط</label>
+                    <input type="text" class="form-control" id="commentProductIdInput" placeholder="شناسه محصول" />
+                </div>
+                <div class="mb-3 d-none" id="productNameInputGroup">
+                    <label for="commentProductNameInput" class="form-label">نام محصول مرتبط</label>
+                    <input type="text" class="form-control" id="commentProductNameInput" disabled />
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">انصراف</button>
+                <button type="submit" class="btn btn-success" id="saveCommentBtn">ذخیره کامنت</button>
+            </div>
+        </form>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    // === کتابخانه تبدیل تاریخ جلالی (هجری شمسی) ===
+    (function (global) {
+        function div(a, b) { return Math.floor(a / b); }
+        function toJalaali(gy, gm, gd) {
+            var g_d_m = [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334];
+            var jy;
+            var jm;
+            var jd;
+            var gy2 = (gm > 2) ? (gy + 1) : gy;
+            var days = 355666 + (365 * gy) + div((gy2 + 3), 4) - div((gy2 + 99), 100) + div((gy2 + 399), 400) + gd + g_d_m[gm - 1];
+            jy = -1595 + (33 * div(days, 12053));
+            days %= 12053;
+            jy += 4 * div(days, 1461);
+            days %= 1461;
+            if (days > 365) {
+                jy += div((days - 1), 365);
+                days = (days - 1) % 365;
+            }
+            if (days < 186) {
+                jm = 1 + div(days, 31);
+                jd = 1 + (days % 31);
+            } else {
+                jm = 7 + div((days - 186), 30);
+                jd = 1 + ((days - 186) % 30);
+            }
+            return { jy: jy, jm: jm, jd: jd };
+        }
+        function toJalaaliDateString(gDate) {
+            var j = toJalaali(gDate.getFullYear(), gDate.getMonth() + 1, gDate.getDate());
+            var pad = (n) => n < 10 ? '0' + n : n;
+            return pad(j.jd) + '/' + pad(j.jm) + '/' + j.jy;
+        }
+        global.jalaali = { toJalaali, toJalaaliDateString };
+    })(window);
+    // --- توابع پایه و احراز هویت ---
+    function getCookieValue(cookieName) {
+        const cookies = document.cookie.split(';');
+        for (const cookie of cookies) {
+            const c = cookie.trim();
+            if (c.startsWith(cookieName + '=')) {
+                return c.substring(cookieName.length + 1);
+            }
+        }
+        return '';
+    }
+    function redirectToLogin() {
+        window.location.href = '/Admin/Login';
+    }
+    const token = getCookieValue('token');
+    if (!token) redirectToLogin();
+    // عناصر صفحه
+    const commentBoxContainer = document.getElementById('commentBoxContainer');
+    const btnAddComment = document.getElementById('btnAddComment');
+    const commentModalElem = document.getElementById('addCommentModal');
+    const commentModal = new bootstrap.Modal(commentModalElem);
+    const commentForm = document.getElementById('commentForm');
+    const commentEditIdInput = document.getElementById('commentEditId');
+    const commentContentInput = document.getElementById('commentContentInput');
+    const commentProductIdInput = document.getElementById('commentProductIdInput');
+    const commentProductNameInput = document.getElementById('commentProductNameInput');
+    const productIdInputGroup = document.getElementById('productIdInputGroup');
+    const productNameInputGroup = document.getElementById('productNameInputGroup');
+    const addCommentModalLabel = document.getElementById('addCommentModalLabel');
+    async function fetchWithAuth(url, options = {}) {
+        options.headers = options.headers || {};
+        options.headers['Authorization'] = 'Bearer ' + token;
+        const response = await fetch(url, options);
+        if (response.status === 401 || response.status === 403) {
+            redirectToLogin();
+            return null;
+        }
+        return response;
+    }
+    // بارگذاری کامنت ها
+    async function loadComments() {
+        commentBoxContainer.innerHTML = "<p>در حال بارگذاری کامنت‌ها...</p>";
+        try {
+            const response = await fetchWithAuth('/GetAllComments');
+            if (!response) return;
+            if (!response.ok) throw new Error("خطا در دریافت کامنت‌ها");
+            const data = await response.json();
+            renderComments(data);
+        } catch (err) {
+            alert(err.message);
+            commentBoxContainer.innerHTML = "";
+        }
+    }
+    // تبدیل تاریخ میلادی به فارسی شمسی همراه زمان
+    function toPersianDateTime(dateStr) {
+        if (!dateStr) return "-";
+        let dt = new Date(dateStr);
+        if (isNaN(dt.getTime())) return "-";
+        const jDate = jalaali.toJalaaliDateString(dt);
+        let hours = dt.getHours().toString().padStart(2, '0');
+        let minutes = dt.getMinutes().toString().padStart(2, '0');
+        let seconds = dt.getSeconds().toString().padStart(2, '0');
+        return jDate + ' ' + hours + ':' + minutes + ':' + seconds;
+    }
+    // رندر کامنت ها
+    function renderComments(comments) {
+        commentBoxContainer.innerHTML = "";
+        if (!comments || comments.length === 0) {
+            commentBoxContainer.innerHTML = "<p>کامنتی وجود ندارد.</p>";
+            return;
+        }
+        comments.forEach(comment => {
+            const card = document.createElement('div');
+            card.className = "card adminuiux-card mb-3 comment-card";
+            const cardBody = document.createElement('div');
+            cardBody.className = "card-body";
+            const row = document.createElement('div');
+            row.className = "row align-items-center";
+            const colLeft = document.createElement('div');
+            colLeft.className = "col";
+            const contentP = document.createElement('p');
+            contentP.textContent = comment.commentContent || "(بدون متن)";
+            contentP.style.whiteSpace = "pre-line";
+            const userFullName = comment.user && comment.user.fullName ? comment.user.fullName : "(کاربر ناشناخته)";
+            const userSmall = document.createElement('small');
+            userSmall.className = "text-muted d-block";
+            userSmall.textContent = `کاربر: ${userFullName} - تاریخ: ${toPersianDateTime(comment.createdDate)}`;
+            const productNameDisplay = comment.productName && comment.productName.trim() !== "" ? comment.productName : "(تعریف نشده)";
+            const productSmall = document.createElement('small');
+            productSmall.className = "text-muted d-block";
+            productSmall.textContent = `نام محصول: ${productNameDisplay}`;
+            colLeft.appendChild(contentP);
+            colLeft.appendChild(productSmall);
+            colLeft.appendChild(userSmall);
+            const colRight = document.createElement('div');
+            colRight.className = "col-auto d-flex gap-2 flex-wrap";
+            const btnEdit = document.createElement('button');
+            btnEdit.className = "btn btn-outline-warning";
+            btnEdit.textContent = "ویرایش";
+            btnEdit.onclick = () => openCommentModal(comment);
+            const btnRemove = document.createElement('button');
+            btnRemove.className = "btn btn-outline-danger";
+            btnRemove.textContent = "حذف";
+            btnRemove.onclick = async () => {
+                if (!confirm(`آیا از حذف این کامنت مطمئن هستید؟`)) return;
+                await deleteComment(comment);
+            };
+            colRight.appendChild(btnEdit);
+            colRight.appendChild(btnRemove);
+            row.appendChild(colLeft);
+            row.appendChild(colRight);
+            cardBody.appendChild(row);
+            card.appendChild(cardBody);
+            commentBoxContainer.appendChild(card);
+        });
+    }
+    // باز کردن مدال کامنت (افزودن یا ویرایش)
+    function openCommentModal(comment = null) {
+        if (comment) {
+            commentEditIdInput.value = comment.id || "";
+            commentContentInput.value = comment.commentContent || "";
+            // در حالت ویرایش: نام محصول را نمایش بده (فقط خواندنی)، شناسه محصول مخفی باشد
+            productIdInputGroup.classList.add('d-none');
+            productNameInputGroup.classList.remove('d-none');
+            commentProductNameInput.value = comment.productName || "";
+        } else {
+            commentEditIdInput.value = "";
+            commentContentInput.value = "";
+            // در حالت افزودن: شناسه محصول نمایش داده شود، نام محصول مخفی باشد
+            productIdInputGroup.classList.remove('d-none');
+            productNameInputGroup.classList.add('d-none');
+            commentProductIdInput.value = "";
+            commentProductNameInput.value = "";
+        }
+        addCommentModalLabel.textContent = comment ? "ویرایش کامنت" : "افزودن کامنت";
+        commentModal.show();
+    }
+    // ارسال فرم کامنت (افزودن یا ویرایش)
+    commentForm.addEventListener('submit', async e => {
+        e.preventDefault();
+        const id = commentEditIdInput.value.trim();
+        const content = commentContentInput.value.trim();
+        if (!content) {
+            alert("لطفا متن کامنت را وارد کنید.");
+            return;
+        }
+        const commentObj = {
+            commentContent: content
+        };
+        if (id) {
+            commentObj.id = id;
+        } else {
+            // در حالت افزودن، شناسه محصول الزامی است
+            const productId = commentProductIdInput.value.trim();
+            if (!productId) {
+                alert("لطفا شناسه محصول مرتبط را وارد کنید.");
+                return;
+            }
+            commentObj.productID = productId;
+        }
+        const url = id ? "EditComment" : "AddComment";
+        try {
+            const res = await fetch(url, {
+                method: "POST",
+                headers: {
+                    'Authorization': 'Bearer ' + token,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(commentObj)
+            });
+            if (res.status === 401 || res.status === 403) {
+                redirectToLogin();
+                return;
+            }
+            if (!res.ok) throw new Error("خطا در ذخیره کامنت");
+            commentModal.hide();
+            await loadComments();
+        } catch (err) {
+            alert(err.message);
+        }
+    });
+    // حذف کامنت
+    async function deleteComment(comment) {
+        try {
+            const res = await fetch("RemoveComment", {
+                method: "POST",
+                headers: {
+                    'Authorization': 'Bearer ' + token,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ id: comment.id })
+            });
+            if (res.status === 401 || res.status === 403) {
+                redirectToLogin();
+                return;
+            }
+            if (!res.ok) throw new Error("خطا در حذف کامنت");
+            await loadComments();
+        } catch (err) {
+            alert(err.message);
+        }
+    }
+    // رویدادهای کلی صفحه
+    btnAddComment.addEventListener('click', () => openCommentModal());
+    window.addEventListener('DOMContentLoaded', async () => {
+        await loadComments();
+    });
+</script>

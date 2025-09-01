@@ -94,8 +94,16 @@ app.MapGet("/{page}", async context =>
         await context.Response.WriteAsync("Page not found");
         return;
     }
-    var masterFilePath = Path.Combine(app.Environment.WebRootPath, "UI", "Master.html");
-    var pageFilePath = Path.Combine(app.Environment.WebRootPath, "UI", page + ".html");
+
+    string masterFilePath = Path.Combine(app.Environment.WebRootPath, "UI", "Master.html");
+    string pageFilePath = Path.Combine(app.Environment.WebRootPath, "UI", page + ".html");
+
+    if (page.Contains("Admin"))
+    {
+        masterFilePath = Path.Combine(app.Environment.WebRootPath, "AdminUI", "Master.html");
+        pageFilePath = Path.Combine(app.Environment.WebRootPath, "AdminUI", page.Replace("Admin/", "") + ".html");
+    }
+
     if (!File.Exists(masterFilePath))
     {
         context.Response.StatusCode = 500;
@@ -114,6 +122,44 @@ app.MapGet("/{page}", async context =>
     var combinedContent = masterContent.Replace("[MainBody]", pageContent);
     context.Response.ContentType = "text/html";
     await context.Response.WriteAsync(combinedContent);
+});
+
+app.MapGet("/Admin/{page}", async context =>
+{
+    var page = context.Request.RouteValues["page"]?.ToString();
+
+    if (string.IsNullOrWhiteSpace(page))
+    {
+        context.Response.StatusCode = 404;
+        await context.Response.WriteAsync("Page not found");
+        return;
+    }
+
+    string masterFilePath = Path.Combine(app.Environment.WebRootPath, "AdminUI", "Master.html");
+    string pageFilePath = Path.Combine(app.Environment.WebRootPath, "AdminUI", page + ".html");
+
+    if (!File.Exists(masterFilePath))
+    {
+        context.Response.StatusCode = 500;
+        await context.Response.WriteAsync("Master template not found");
+        return;
+    }
+    if (!File.Exists(pageFilePath))
+    {
+        context.Response.StatusCode = 404;
+        await context.Response.WriteAsync("Page not found");
+        return;
+    }
+    var masterContent = await File.ReadAllTextAsync(masterFilePath);
+    var pageContent = await File.ReadAllTextAsync(pageFilePath);
+    // Replace [MainBody] with the page content
+    var combinedContent = masterContent.Replace("[MainBody]", pageContent);
+    context.Response.ContentType = "text/html";
+
+    if (page == "Login")
+        await context.Response.WriteAsync(pageContent);
+    else
+        await context.Response.WriteAsync(combinedContent);
 });
 
 app.UseSwagger();
